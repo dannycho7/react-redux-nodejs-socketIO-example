@@ -3,16 +3,30 @@ const http = require("http");
 const socketIo = require("socket.io");
 const axios = require("axios");
 
-const app = require("./app");
+const app = require("../app");
 
 const server = http.createServer(app);
 const io = socketIo(server);
 
 io.on("connection", socket => {
 	console.log("New client connection");
-	setInterval(() => getApiAndEmit(socket), 10000);
+	let interval = [];
 
-	socket.on("disconnect", () => console.log("Client disconnected"));
+	socket.on("poll", (t) => {
+		console.log(`Received ${t}`);
+		interval.push(setInterval(() => getApiAndEmit(socket), 5000));
+		console.log("Added new poll to interval array");
+	});
+
+	socket.on("stop", () => {
+		console.log("Stopped polling for new weather");
+		clearInterval(interval[0]);
+	});
+
+	socket.on("disconnect", () => {
+		console.log("Client disconnected");
+		clearInterval(interval[0]);
+	});
 });
 
 const getApiAndEmit = socket => {
