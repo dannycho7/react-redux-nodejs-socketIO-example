@@ -1,22 +1,23 @@
 import React, { Component } from "react";
+import { connect } from "redux";
 import socketIOClient from "socket.io-client";
+
+import { } from "../../actions";
 import ChatPresenter from "./presenter";
 
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+
+  };
+};
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+
+  };
+};
+
 class Chat extends Component {
-  constructor() {
-    super();
-    this.state = {
-      history: [],
-      endpoint: "http://127.0.0.1:5000",
-      socket: undefined,
-      activeRoom: "default",
-      rooms: []
-    };
-
-    this.sendMessage = this.sendMessage.bind(this);
-    this.joinRoom = this.joinRoom.bind(this);
-  }
-
   componentDidMount() {
     const { endpoint, history, activeRoom } = this.state;
 
@@ -31,31 +32,6 @@ class Chat extends Component {
       console.log("Received message", data);
       this.updateHistory(data);
     });
-  }
-
-  sendMessage(message) {
-    const { socket, activeRoom } = this.state,
-          message_info = Object.assign({}, message, { room: activeRoom });
-
-    socket.emit("message", message_info);
-    this.updateHistory(message_info)
-  }
-
-  joinRoom(room_name) {
-    const { socket, rooms } = this.state,
-          { message } = room_name,
-          activeRoom = message;
-
-    socket.emit("room", activeRoom);
-    this.setState({
-      activeRoom,
-      rooms: [...rooms, activeRoom]
-    });
-  }
-
-  updateHistory(message_info) {
-    const { history } = this.state;
-    this.setState({ history: [...history, message_info] }); 
   }
 
   render() {
