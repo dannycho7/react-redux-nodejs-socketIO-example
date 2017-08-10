@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
-import TemperaturePresenter from "./presenter";
+import ChatPresenter from "./presenter";
 
 class Temperature extends Component {
   constructor() {
     super();
     this.state = {
-      response: false,
+      history: [],
       endpoint: "http://127.0.0.1:5000",
-      polling: false,
       socket: undefined
     };
+
+    this.sendMessage = this.sendMessage.bind(this);
   }
 
   componentDidMount() {
@@ -18,27 +19,20 @@ class Temperature extends Component {
 
     const socket = socketIOClient(endpoint);
 
-    socket.on("FromAPI", data => this.setState({ response: data }));
+    socket.on("message", data => this.setState({ history: [...this.state.history, data] }));
 
     this.setState({ socket });
   }
 
-  sendPoll() {
-    const { polling, socket } = this.state;
-
-    polling ? socket.emit("stop") : socket.emit("poll");
-
-    this.setState({
-      polling: !polling
-    });
+  sendMessage(message_info) {
+    this.state.socket.emit("message", message_info);
   }
 
   render() {
     const { response } = this.state;
     return (
       <div>
-        <TemperaturePresenter response={response} polling={this.state.polling} />
-        <button onClick={() => this.sendPoll()}>{ this.state.polling ? "Stop Updating" : "Request Weather" }</button>
+        <ChatPresenter sendMessage={this.sendMessage} history={this.state.history} />
       </div>
     );
   }

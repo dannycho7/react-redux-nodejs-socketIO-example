@@ -6,12 +6,12 @@ import {
 } from "react-router-dom";
 
 import App from "./components/App";
-import Temperature from "./components/Temperature";
+import Chat from "./components/Chat";
 
 ReactDOM.render(
 	<Router>
 		<App>
-			<Route path="/" component={Temperature}/>
+			<Route path="/" component={Chat}/>
 		</App>
 	</Router>,
 	document.getElementById("root")
