@@ -13,12 +13,14 @@ class Form extends React.Component {
 
 	onSubmit(evt) {
 		evt.preventDefault();
+		const { message } = this.state;
 		const { onSubmit } = this.props;
-		if(onSubmit) {
-			onSubmit({
-				message: this.state.message
-			});
-		}
+
+		onSubmit({ message });
+		
+		this.setState({
+			message: ""
+		})
 	}
 
 	handleChange(evt) {
@@ -28,10 +30,11 @@ class Form extends React.Component {
 	}
 
 	render() {
+		const { action_name } = this.props;
 		return (
 			<form action="/" onSubmit={this.onSubmit}>
 				<input type="text" name="message" onChange={this.handleChange} value={this.state.message} />
-				<button type="submit">Send Message</button>
+				<button type="submit">{action_name}</button>
 			</form>
 		);
 	}

@@ -1,17 +1,19 @@
 import React from "react";
 import Form from "../Form";
 
-const Chat = ({ history, sendMessage }) => {
+const Chat = ({ activeRoom, history, sendMessage, joinRoom }) => {
 	return (
-		<div style={{ textAlign: "center" }}>
+		<div>
 			{
 				history.map((message_info, key) => {
+					console.log(message_info);
 					return (
-						<div key={key}>{message_info.message}</div>
+						activeRoom === message_info.room ? <div key={key}>{message_info.message}</div>: null
 					)
 				})
 			}
-			<Form onSubmit={sendMessage}/>
+			<Form action_name="Send Message" onSubmit={sendMessage} />
+			<Form action_name="Join Room" onSubmit={joinRoom} />
 		</div>
 	);
 };
