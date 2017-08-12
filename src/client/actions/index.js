@@ -1,47 +1,53 @@
+import socketIOClient from "socket.io-client";
 import * as actionTypes from "../constants";
 
-export sendMessage(message) {
-  const { socket, activeRoom } = this.state,
-  message_info = Object.assign({}, message, { room: activeRoom });
+export const sendMessage = (message) => {
+  return function(dispatch, getState) {
+    const { socket, activeRoom } = getState().chat;
+    const message_info = Object.assign({}, message, { room: activeRoom });
 
-  socket.emit("message", message_info);
-
-  return {
-    type: actionTypes.UPDATE_HISTORY,
-    payload: message_info
+    socket.emit("message", message_info);
+    dispatch({
+      type: actionTypes.UPDATE_HISTORY,
+      payload: message_info
+    });
   };
 }
 
-export joinRoom(room_name = "default") {
-  const { socket, rooms } = this.state,
-        { message } = room_name,
-        activeRoom = message;
+export const joinRoom = (room_name = "default") => {
+  return function(dispatch, getState) {
+    const { socket } = getState().chat,
+          { message } = room_name,
+          activeRoom = message;
 
-  socket.emit("room", activeRoom);
+    socket.emit("room", activeRoom);
 
-  return {
-    type: actionTypes.JOIN_ROOM
-    payload: {
-      activeRoom,
-      rooms: activeRoom
-    }
-  };
+    dispatch({
+      type: actionTypes.JOIN_ROOM,
+      payload: activeRoom
+    });
+  }
 }
 
-export initialConnect() {
-  const { endpoint, history, activeRoom } = this.props;
+export const initialConnect = () => {
+  return function(dispatch, getState) {
+    const { endpoint, history, activeRoom } = getState().chat;
+    const socket = socketIOClient(endpoint);
 
-  const socket = socketIOClient(endpoint);
-
-  return function(state) {
     socket.on("connect", () => {
       socket.emit("room", activeRoom);
-      this.setState({ socket });
+      dispatch({
+        type: actionTypes.SET_SOCKET,
+        payload: socket
+      });
     });
 
     socket.on("message", data => {
       console.log("Received message", data);
-      this.updateHistory(data);
+      dispatch({
+        type: actionTypes.UPDATE_HISTORY,
+        payload: data
+      });
     });
   }
 }

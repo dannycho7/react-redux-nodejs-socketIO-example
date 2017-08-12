@@ -27,7 +27,7 @@ const chat = (state = initialState, action) => {
 		}
 		case actionTypes.UPDATE_HISTORY: {
 			return Object.assign({}, state, {
-				history: [...state, action.payload]
+				history: [...state.history, action.payload]
 			});
 		}
 		default: {
