@@ -8,7 +8,7 @@ const Chat = ({ activeRoom, history, sendMessage, joinRoom }) => {
 				history.map((message_info, key) => {
 					return (
 						activeRoom === message_info.room ? <div key={key}>{message_info.message}</div>: null
-					)
+					);
 				})
 			}
 			<Form action_name="Send Message" onSubmit={sendMessage} />

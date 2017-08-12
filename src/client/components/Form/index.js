@@ -20,13 +20,13 @@ class Form extends React.Component {
 		
 		this.setState({
 			message: ""
-		})
+		});
 	}
 
 	handleChange(evt) {
 		this.setState({
 			message: evt.target.value
-		})
+		});
 	}
 
 	render() {
@@ -38,6 +38,6 @@ class Form extends React.Component {
 			</form>
 		);
 	}
-};
+}
 
 export default Form;

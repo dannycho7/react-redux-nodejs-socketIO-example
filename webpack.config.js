@@ -19,4 +19,4 @@ module.exports = {
 		path: path.join(__dirname, "src/static"),
 		filename: "bundle.js"
 	}
-}
+};
