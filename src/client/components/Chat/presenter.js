@@ -6,7 +6,6 @@ const Chat = ({ activeRoom, history, sendMessage, joinRoom }) => {
 		<div>
 			{
 				history.map((message_info, key) => {
-					console.log(message_info);
 					return (
 						activeRoom === message_info.room ? <div key={key}>{message_info.message}</div>: null
 					)
