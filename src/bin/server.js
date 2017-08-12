@@ -9,7 +9,7 @@ const io = socketIo(server);
 
 io.on("connection", socket => {
 	console.log("New client connection");
-	let interval = [];
+	socket.join("default");
 
 	socket.on("room", (room) => socket.join(room));
 	socket.on("leave", (room) => socket.leave(room));

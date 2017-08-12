@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-import { connect } from "redux";
-import socketIOClient from "socket.io-client";
+import { connect } from "react-redux";
 
-import { joinRoom, sendMessage } from "../../actions";
+import { joinRoom, sendMessage, initialConnect } from "../../actions";
 import ChatPresenter from "./presenter";
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    sendMessage: (nessage) => dispatch(sendMessage(message)),
-    joinRoom: (room_name) => dispatch(joinRoom(room_name))
+    sendMessage: (message) => dispatch(sendMessage(message)),
+    joinRoom: (room_name) => dispatch(joinRoom(room_name)),
+    initialConnect: () => dispatch(initialConnect())
   };
 };
 
@@ -21,19 +21,8 @@ const mapStateToProps = (state, ownProps) => {
 
 class Chat extends Component {
   componentDidMount() {
-    const { endpoint, history, activeRoom } = this.state;
-
-    const socket = socketIOClient(endpoint);
-
-    socket.on("connect", () => {
-      socket.emit("room", activeRoom);
-      this.setState({ socket });
-    });
-
-    socket.on("message", data => {
-      console.log("Received message", data);
-      this.updateHistory(data);
-    });
+    const { initialConnect } = this.props;
+    initialConnect();
   }
 
   render() {
