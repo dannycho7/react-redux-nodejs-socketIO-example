@@ -2,18 +2,20 @@ import React, { Component } from "react";
 import { connect } from "redux";
 import socketIOClient from "socket.io-client";
 
-import { } from "../../actions";
+import { joinRoom, sendMessage } from "../../actions";
 import ChatPresenter from "./presenter";
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-
+    sendMessage: (nessage) => dispatch(sendMessage(message)),
+    joinRoom: (room_name) => dispatch(joinRoom(room_name))
   };
 };
 
 const mapStateToProps = (state, ownProps) => {
   return {
-
+    activeRoom: state.chat.activeRoom,
+    history: state.chat.history
   };
 };
 
@@ -35,19 +37,19 @@ class Chat extends Component {
   }
 
   render() {
-    const { activeRoom, history } = this.state;
+    const { activeRoom, history, sendMessage, joinRoom } = this.props;
     return (
       <div>
         <h2>You are currently in the {activeRoom} room</h2>
         <ChatPresenter
-          sendMessage={this.sendMessage}
+          sendMessage={sendMessage}
           history={history}
           activeRoom={activeRoom}
-          joinRoom={this.joinRoom}
+          joinRoom={joinRoom}
         />
       </div>
     );
   }
 }
 
-export default Chat;
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);
