@@ -2,16 +2,19 @@ import * as actionTypes from "../constants";
 
 const initialState = {
 	history: [],
-	endpoint: "http://127.0.0.1:5000",
-	socket: undefined,
-	activeRoom: "default",
-	rooms: []
+	endpoint: "/",
+	socket: null,
+	activeRoom: null,
+	rooms: [],
+	user: null
 };
 
 const chat = (state = initialState, action) => {
 	switch(action.type) {
-	case actionTypes.SET_SOCKET: {
-		return Object.assign({}, state, { socket: action.payload });
+	case actionTypes.CONNECT_SUCCESS: {
+		const { user, socket } = action;
+		console.log(socket);
+		return Object.assign({}, state, { user, socket });
 	}
 	case actionTypes.JOIN_ROOM: {
 		const rooms = state.rooms.includes(action.payload) ? state.rooms : [...state.rooms, action.payload];

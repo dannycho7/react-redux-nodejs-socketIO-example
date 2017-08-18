@@ -16,7 +16,7 @@ class Form extends React.Component {
 		const { message } = this.state;
 		const { onSubmit } = this.props;
 
-		onSubmit({ message });
+		onSubmit(message);
 		
 		this.setState({
 			message: ""
@@ -30,10 +30,16 @@ class Form extends React.Component {
 	}
 
 	render() {
-		const { action_name } = this.props;
+		const { action_name, placeHolderText } = this.props;
 		return (
 			<form action="/" onSubmit={this.onSubmit}>
-				<input type="text" name="message" onChange={this.handleChange} value={this.state.message} />
+				<input
+					type="text"
+					name="message"
+					onChange={this.handleChange}
+					value={this.state.message}
+					placeholder={placeHolderText}
+				/>
 				<button type="submit">{action_name}</button>
 			</form>
 		);

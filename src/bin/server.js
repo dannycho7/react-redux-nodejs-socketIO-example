@@ -9,9 +9,11 @@ const io = socketIo(server);
 
 io.on("connection", socket => {
 	console.log("New client connection");
-	socket.join("default");
 
-	socket.on("room", (room) => socket.join(room));
+	socket.on("room", (room) => {
+		console.log(`Client from socket ${socket.id} joined room ${room}`);
+		socket.join(room);
+	});
 	socket.on("leave", (room) => socket.leave(room));
 
 	socket.on("message", (message_info) => {
