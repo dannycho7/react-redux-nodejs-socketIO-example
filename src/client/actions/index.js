@@ -10,7 +10,9 @@ function updateHistory(message_info) {
 
 export const sendMessage = (message) => {
 	return function(dispatch, getState) {
-		const { socket, activeRoom, user } = getState().chat;
+		const state = getState();
+		const { socket, activeRoom } = state.chat;
+		const { user } = state.auth;
 		const timestamp = new Date().toISOString().substr(11, 8); // Hour minute seconds format
 		const message_info = Object.assign({}, { message }, { room: activeRoom, user, timestamp });
 
@@ -39,9 +41,8 @@ export const initialConnect = (defaultRoom = "default") => {
 
 		socket.on("connect", () => {
 			dispatch({
-				type: actionTypes.CONNECT_SUCCESS,
-				user: "guest-" + socket.id,
-				socket: socket
+				type: actionTypes.SOCKET_CONNECT_SUCCESS,
+				socket
 			});
 			dispatch(joinRoom(defaultRoom));
 		});
@@ -59,11 +60,36 @@ export const signup = (values, history) => {
 
 		xhttp.addEventListener("load", () => {
 			let response = JSON.parse(xhttp.responseText)
-
-			history.push("/");
+			history.push("/login", {
+				message: "Successfully Signed Up"
+			});
 		});
 
 		xhttp.open("POST", "/signup");
-		xhttp.send(values);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+		xhttp.send("test=1&username=" + values.username);
 	}
 }
+
+export const login = (values, history) => {
+	return function(dispatch, getState) {
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.addEventListener("load", () => {
+			let response = JSON.parse(xhttp.responseText);
+			dispatch({
+				type: actionTypes.AUTH_SUCCESS,
+				user: response.user
+			});
+			history.push("/", {
+				message: "Successfully Logged In"
+			});
+		});
+
+		xhttp.open("POST", "/login");
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+		xhttp.send("username=" + values.username + "&password=" + values.password);
+	}
+};

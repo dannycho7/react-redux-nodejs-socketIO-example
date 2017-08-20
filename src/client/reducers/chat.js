@@ -6,15 +6,13 @@ const initialState = {
 	socket: null,
 	activeRoom: null,
 	rooms: [],
-	user: null
 };
 
 const chat = (state = initialState, action) => {
 	switch(action.type) {
-	case actionTypes.CONNECT_SUCCESS: {
-		const { user, socket } = action;
-		console.log(socket);
-		return Object.assign({}, state, { user, socket });
+	case actionTypes.SOCKET_CONNECT_SUCCESS: {
+		const { socket } = action;
+		return Object.assign({}, state, { socket });
 	}
 	case actionTypes.JOIN_ROOM: {
 		const rooms = state.rooms.includes(action.payload) ? state.rooms : [...state.rooms, action.payload];

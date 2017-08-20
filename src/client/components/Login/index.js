@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router";
 
 import Form from "./Form";
-import { signup } from "../../actions";
+import { login } from "../../actions";
 
 const mapStateToProps = (state) => {
 	const { isAuthenticated } = state.auth.isAuthenticated;
@@ -14,19 +14,19 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		signup: (values, history) => dispatch(signup(values, history))
+		login: (values, history) => dispatch(login(values, history))
 	};
 };
 
-const Signup = ({ match, signup, history, isAuthenticated }) => {
+const Login = ({ match, login, history, isAuthenticated }) => {
 	return (
 		isAuthenticated ? <Redirect to="/" /> : (
 			<div>
-				<h1>Signup</h1>
-				<Form handleSubmit={ (values) => signup(values, history) }/>
+				<h1>Login</h1>
+				<Form handleSubmit={ (values) => login(values, history) }/>
 			</div>
 		)
 	);
 };
 
-export default connect(null, mapDispatchToProps)(Signup);
+export default connect(null, mapDispatchToProps)(Login);

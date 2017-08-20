@@ -11,13 +11,14 @@ import store from "./stores";
 import App from "./components/App";
 import Chat from "./components/Chat";
 import Signup from "./components/Signup";
-
+import Login from "./components/Login";
 
 ReactDOM.render(
 	<Provider store={store}>
 		<Router>
 			<App>
 				<Switch>
+					<Route path="/login" component={Login} />
 					<Route path="/signup" component={Signup} />
 					<Route path="/" component={Chat} />
 				</Switch>
