@@ -13,13 +13,14 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state) => {
-	const { activeRoom, history } = state.chat;
+	const { activeRoom, history, socket } = state.chat;
 	const { user, isAuthenticated } = state.auth;
 	return {
 		activeRoom,
 		history,
 		user,
-		isAuthenticated
+		isAuthenticated,
+		socket
 	};
 };
 
@@ -28,11 +29,19 @@ class Chat extends Component {
 		const { initialConnect } = this.props;
 		initialConnect();
 	}
+	componentWillUnmount() {
+		const { socket } = this.props;
+
+		if(socket) {
+			socket.disconnect();
+		}
+	}
 
 	render() {
-		const { activeRoom, history, sendMessage, joinRoom, user, isAuthenticated } = this.props;
+		const { activeRoom, history, sendMessage, joinRoom, user, isAuthenticated, location } = this.props;
 		return (
 			<div>
+				{ location.state ? <h1>{ location.state.message }</h1> : null }
 				<p>{ activeRoom ? `Room: ${activeRoom}`: "You are currently in an active room"}</p>
 				<p>{ user ? `Signed on as ${user}` : "Not yet connected" }</p>
 				{ isAuthenticated ? null : <p>Not yet authenticated</p> }

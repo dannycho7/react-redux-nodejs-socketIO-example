@@ -18,14 +18,16 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-const Login = ({ match, login, history, isAuthenticated }) => {
+const Login = ({ match, login, history, isAuthenticated, location }) => {
+	if(isAuthenticated) {
+		return <Redirect to="/" />;
+	}
 	return (
-		isAuthenticated ? <Redirect to="/" /> : (
-			<div>
-				<h1>Login</h1>
-				<Form handleSubmit={ (values) => login(values, history) }/>
-			</div>
-		)
+		<div>
+			{ location.state ? <h1>{ location.state.message }</h1> : null }
+			<h1>Login</h1>
+			<Form handleSubmit={ (values) => login(values, history) }/>
+		</div>
 	);
 };
 
