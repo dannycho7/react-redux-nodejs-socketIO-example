@@ -1,6 +1,6 @@
 import React from "react";
-import Form from "../Form";
-import Message from "../Message";
+import Form from "./Form";
+import Message from "./Message";
 
 const Chat = ({ activeRoom, history, sendMessage, joinRoom }) => {
 	return (

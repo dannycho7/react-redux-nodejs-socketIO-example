@@ -52,3 +52,18 @@ export const initialConnect = (defaultRoom = "default") => {
 		});
 	};
 };
+
+export const signup = (values, history) => {
+	return function(dispatch, getState) {
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.addEventListener("load", () => {
+			let response = JSON.parse(xhttp.responseText)
+
+			history.push("/");
+		});
+
+		xhttp.open("POST", "/signup");
+		xhttp.send(values);
+	}
+}
