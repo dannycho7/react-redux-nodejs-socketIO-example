@@ -1,14 +1,29 @@
 require("dotenv").config();
-const http = require("http");
-const socketIo = require("socket.io");
 
-const app = require("../app");
+const http = require("http"),
+socketIo = require("socket.io"),
+cookieParser = require("cookie-parser"),
+passportSocketIo = require("passport.socketio");
+
+const { sessionStore, default: app } = require("../app");
 
 const server = http.createServer(app);
 const io = socketIo(server);
 
+io.use(passportSocketIo.authorize({
+	cookieParser: cookieParser,
+	key: "chat.sid",
+	secret: "this can be whatever you want",
+	store: sessionStore,
+	fail: (data, message, error, accept) => { accept(null, !error); }
+}));
+
 io.on("connection", socket => {
-	console.log("New client connection");
+	console.log("New client connection from user is logged in:", socket.request.user.logged_in === undefined ? true : false);
+
+	socket.on("user", user => {
+		console.log("Received", user);
+	});
 
 	socket.on("room", (room) => {
 		console.log(`Client from socket ${socket.id} joined room ${room}`);

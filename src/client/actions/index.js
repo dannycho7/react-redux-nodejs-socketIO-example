@@ -36,7 +36,9 @@ export const joinRoom = (roomName) => {
 
 export const initialConnect = (defaultRoom = "default") => {
 	return function(dispatch, getState) {
-		const { endpoint, activeRoom } = getState().chat;
+		const state = getState();
+		const { endpoint, activeRoom } = state.chat;
+		const { user } = state.auth;
 		const socket = socketIOClient(endpoint);
 
 		socket.on("connect", () => {
@@ -44,6 +46,12 @@ export const initialConnect = (defaultRoom = "default") => {
 				type: actionTypes.SOCKET_CONNECT_SUCCESS,
 				socket
 			});
+			if(user) {
+				socket.emit("user", {
+					user
+				});
+			}
+
 			dispatch(joinRoom(defaultRoom));
 		});
 
@@ -68,7 +76,9 @@ export const signup = (values, history) => {
 		xhttp.open("POST", "/signup");
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-		xhttp.send("test=1&username=" + values.username);
+		const { username, password } = values;
+
+		xhttp.send(JSON.stringify({ username, password }));
 	}
 }
 
@@ -88,8 +98,10 @@ export const login = (values, history) => {
 		});
 
 		xhttp.open("POST", "/login");
-		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.setRequestHeader("Content-type", "application/json");
 
-		xhttp.send("username=" + values.username + "&password=" + values.password);
+		const { username, password } = values;
+
+		xhttp.send(JSON.stringify({ username, password }));
 	}
 };
