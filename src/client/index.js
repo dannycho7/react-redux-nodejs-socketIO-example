@@ -6,12 +6,18 @@ import {
 	Route,
 	Switch
 } from "react-router-dom";
-import store from "./stores";
+import configureStore from "./stores";
 
 import App from "./components/App";
 import Chat from "./components/Chat";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+
+const preloadedState = window.__PRELOADED_STATE__;
+
+const store = configureStore(preloadedState);
+
+delete window.__PRELOADED_STATE__;
 
 ReactDOM.render(
 	<Provider store={store}>

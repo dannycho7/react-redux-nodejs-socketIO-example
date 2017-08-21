@@ -37,13 +37,10 @@ export const joinRoom = (roomName) => {
 
 		socket.emit("room", roomName);
 
-
 		dispatch({
 			type: actionTypes.JOIN_ROOM,
 			payload: roomName
 		});
-
-
 	};
 };
 
@@ -59,7 +56,6 @@ export const initialConnect = (defaultRoom = "default") => {
 				type: actionTypes.SOCKET_CONNECT_SUCCESS,
 				socket
 			});
-			console.log(activeRoom);
 			if(!activeRoom) dispatch(joinRoom(defaultRoom));
 		});
 

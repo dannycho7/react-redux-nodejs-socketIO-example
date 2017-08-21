@@ -3,6 +3,6 @@ import logger from "redux-logger";
 import thunk from "redux-thunk";
 import reducers from "../reducers";
 
-const store = createStore(reducers, undefined, applyMiddleware(thunk, logger));
+const configureStore = (initialState) => createStore(reducers, initialState, applyMiddleware(thunk, logger));
 
-export default store;
+export default configureStore;

@@ -2,6 +2,7 @@ import * as actionTypes from "../constants";
 
 const initialState = {
 	isAuthenticated: false,
+	user: null,
 	authMessage: ""
 };
 

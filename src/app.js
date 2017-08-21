@@ -10,6 +10,9 @@ const sessionStore = new MongoStore({
 	url: process.env.DB_URL
 });
 
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
 app.use(express.static(path.join(__dirname, "static")));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -28,7 +31,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get("*", (req, res) => {
-	res.sendFile(path.join(__dirname, "static/index.html"));
+	if(req.user) {
+		res.locals.preloadedState = {
+			auth: {
+				isAuthenticated: true,
+				user: req.user.username
+			}
+		}
+	}
+	res.render("index");
 });
 
 app.post("/login", (req, res, next) => {
