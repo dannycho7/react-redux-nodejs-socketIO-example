@@ -1,7 +1,8 @@
 import * as actionTypes from "../constants";
 
 const initialState = {
-	isAuthenticated: false
+	isAuthenticated: false,
+	authMessage: ""
 };
 
 const socketConnectSuccess = (state, action) => {
@@ -16,8 +17,12 @@ const socketConnectSuccess = (state, action) => {
 
 const auth = (state = initialState, action) => {
 	switch(action.type) {
+		case actionTypes.AUTH_START:
+			return Object.assign({}, state, { authMessage: action.message });
+		case actionTypes.AUTH_FAILURE:
+			return Object.assign({}, state, { authMessage: action.message });
 		case actionTypes.AUTH_SUCCESS:
-			return Object.assign({}, state, { isAuthenticated: true, user: action.user });
+			return Object.assign({}, state, { isAuthenticated: true, user: action.user, authMessage: "" });
 		case actionTypes.SOCKET_CONNECT_SUCCESS: 
 			return socketConnectSuccess(state, action)
 		default:

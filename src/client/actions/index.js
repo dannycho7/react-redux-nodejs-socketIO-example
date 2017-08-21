@@ -1,23 +1,24 @@
 import socketIOClient from "socket.io-client";
 import * as actionTypes from "../constants";
 
-function updateHistory(message_info) {
+function updateHistory(message) {
 	return {
 		type: actionTypes.UPDATE_HISTORY,
-		payload: message_info
+		room: message.room,
+		payload: message
 	}
 }
 
-export const sendMessage = (message) => {
+export const sendMessage = (content) => {
 	return function(dispatch, getState) {
 		const state = getState();
 		const { socket, activeRoom } = state.chat;
 		const { user } = state.auth;
 		const timestamp = new Date().toISOString().substr(11, 8); // Hour minute seconds format
-		const message_info = Object.assign({}, { message }, { room: activeRoom, user, timestamp });
+		const message_info = Object.assign({}, { content }, { room: activeRoom, timestamp });
 
 		socket.emit("message", message_info);
-		dispatch(updateHistory(message_info));
+		dispatch(updateHistory(Object.assign({}, message_info, {user})));
 	};
 };
 
@@ -25,12 +26,24 @@ export const joinRoom = (roomName) => {
 	return function(dispatch, getState) {
 		const { socket } = getState().chat;
 
+		socket.once("fetch-" + roomName, history => {
+			console.log(history);
+			dispatch({
+				type: actionTypes.LOAD_HISTORY,
+				room: roomName,
+				payload: history
+			});
+		});
+
 		socket.emit("room", roomName);
+
 
 		dispatch({
 			type: actionTypes.JOIN_ROOM,
 			payload: roomName
 		});
+
+
 	};
 };
 
@@ -46,13 +59,8 @@ export const initialConnect = (defaultRoom = "default") => {
 				type: actionTypes.SOCKET_CONNECT_SUCCESS,
 				socket
 			});
-			if(user) {
-				socket.emit("user", {
-					user
-				});
-			}
-
-			dispatch(joinRoom(defaultRoom));
+			console.log(activeRoom);
+			if(!activeRoom) dispatch(joinRoom(defaultRoom));
 		});
 
 		socket.on("message", message_info => {
@@ -74,7 +82,7 @@ export const signup = (values, history) => {
 		});
 
 		xhttp.open("POST", "/signup");
-		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.setRequestHeader("Content-type", "application/json");
 
 		const { username, password } = values;
 
@@ -86,15 +94,24 @@ export const login = (values, history) => {
 	return function(dispatch, getState) {
 		var xhttp = new XMLHttpRequest();
 
+		dispatch({ type: actionTypes.AUTH_START, message: "Attempting to authenticate user..." });
+
 		xhttp.addEventListener("load", () => {
 			let response = JSON.parse(xhttp.responseText);
-			dispatch({
-				type: actionTypes.AUTH_SUCCESS,
-				user: response.user
-			});
-			history.push("/", {
-				message: "Successfully Logged In"
-			});
+			if(response.user) {
+				dispatch({
+					type: actionTypes.AUTH_SUCCESS,
+					user: response.user
+				});
+				history.push("/", {
+					message: "Successfully Logged In"
+				});
+			} else {
+				dispatch({
+					type: actionTypes.AUTH_FAILURE,
+					message: response.message
+				});
+			}
 		});
 
 		xhttp.open("POST", "/login");

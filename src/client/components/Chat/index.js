@@ -39,6 +39,7 @@ class Chat extends Component {
 
 	render() {
 		const { activeRoom, history, sendMessage, joinRoom, user, isAuthenticated, location } = this.props;
+		const messages = history[activeRoom] || [];
 		return (
 			<div>
 				{ location.state ? <h1>{ location.state.message }</h1> : null }
@@ -47,8 +48,7 @@ class Chat extends Component {
 				{ isAuthenticated ? null : <p>Not yet authenticated</p> }
 				<ChatPresenter
 					sendMessage={sendMessage}
-					history={history}
-					activeRoom={activeRoom}
+					messages={messages}
 					joinRoom={joinRoom}
 				/>
 			</div>

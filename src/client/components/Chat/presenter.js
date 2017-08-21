@@ -2,22 +2,20 @@ import React from "react";
 import Form from "./Form";
 import Message from "./Message";
 
-const Chat = ({ activeRoom, history, sendMessage, joinRoom }) => {
+const Chat = ({ activeRoom, messages, sendMessage, joinRoom }) => {
 	return (
 		<div className="chat">
 			<div className="message-list">
 				{
-					history.map((message_info, key) => {
-						const { user, message, timestamp } = message_info;
+					messages.map((message_info, key) => {
+						const { user, content, timestamp } = message_info;
 						return (
-							activeRoom === message_info.room ? (
-								<Message
-									key={key}
-									user={user}
-									message={message}
-									timestamp={timestamp}
-								/>
-							) : null
+							<Message
+								key={key}
+								user={user}
+								content={content}
+								timestamp={timestamp}
+							/>
 						);
 					})
 				}

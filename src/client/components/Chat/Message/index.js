@@ -1,9 +1,9 @@
 import React from "react";
 
-const Message = ({ user, message, timestamp }) => {
+const Message = ({ user, content, timestamp }) => {
 	return (
 		<div>
-			<span>[{timestamp}]</span> <b><span>{user}</span></b>: <span>{message}</span>
+			<span>[{timestamp}]</span> <b><span>{user}</span></b>: <span>{content}</span>
 		</div>
 	);
 };

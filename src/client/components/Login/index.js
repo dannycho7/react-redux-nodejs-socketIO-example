@@ -6,10 +6,11 @@ import Form from "./Form";
 import { login } from "../../actions";
 
 const mapStateToProps = (state) => {
-	const { isAuthenticated } = state.auth.isAuthenticated;
+	const { isAuthenticated, authMessage } = state.auth;
 	return {
-		isAuthenticated
-	}
+		isAuthenticated,
+		authMessage
+	};
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -18,12 +19,13 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-const Login = ({ match, login, history, isAuthenticated, location }) => {
+const Login = ({ match, login, history, isAuthenticated, location, authMessage }) => {
 	if(isAuthenticated) {
 		return <Redirect to="/" />;
 	}
 	return (
 		<div>
+			{ authMessage ? <h1 style={{ color: "red" }}>{ authMessage }</h1> : null }
 			{ location.state ? <h1>{ location.state.message }</h1> : null }
 			<h1>Login</h1>
 			<Form handleSubmit={ (values) => login(values, history) }/>
@@ -31,4 +33,4 @@ const Login = ({ match, login, history, isAuthenticated, location }) => {
 	);
 };
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
