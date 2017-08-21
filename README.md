@@ -1,8 +1,9 @@
 # React + Redux + Node.js + SocketIO App Example
 
-Scope of this App:
+A chat app built with:
 
-	- Uses above technology
-	- Calls external API for data polling
-		- Constant data queuing
-	- Server side rendering
+	- React.js (Redux)
+	- Node.js (Express)
+	- MongoDB (Mongoose)
+	- SocketIO
+	- Passport.js
